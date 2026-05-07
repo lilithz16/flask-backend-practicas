@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from services.validation_service import validar_datos_candidato
+
 app = Flask(__name__)
 
 CORS(app)
@@ -36,9 +38,17 @@ def recibir_solicitud():
         "privacidad": request.form.get("privacidad")
     }
 
+    es_valido, mensaje = validar_datos_candidato(datos_candidato)
+
+    if not es_valido:
+        return jsonify({
+            "success": False,
+            "message": mensaje
+        }), 400
+
     return jsonify({
         "success": True,
-        "message": "Datos recibidos correctamente",
+        "message": "Datos validados correctamente",
         "datos_recibidos": datos_candidato
     }), 200
 
