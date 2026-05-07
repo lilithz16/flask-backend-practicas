@@ -46,10 +46,19 @@ def recibir_solicitud():
             "message": mensaje
         }), 400
 
+    cv = request.files.get("cv")
+
+    if cv is None or cv.filename == "":
+        return jsonify({
+            "success": False,
+            "message": "Debe adjuntar un CV."
+        }), 400
+
     return jsonify({
         "success": True,
-        "message": "Datos validados correctamente",
-        "datos_recibidos": datos_candidato
+        "message": "Datos y CV recibidos correctamente",
+        "datos_recibidos": datos_candidato,
+        "archivo_recibido": cv.filename
     }), 200
 
 
