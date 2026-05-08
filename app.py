@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from services.validation_service import validar_datos_candidato
+from services.file_service import extension_permitida
 
 app = Flask(__name__)
 
@@ -52,6 +53,12 @@ def recibir_solicitud():
         return jsonify({
             "success": False,
             "message": "Debe adjuntar un CV."
+        }), 400
+
+    if not extension_permitida(cv.filename):
+        return jsonify({
+            "success": False,
+            "message": "El archivo debe ser PDF, DOC o DOCX."
         }), 400
 
     return jsonify({
